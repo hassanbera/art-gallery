@@ -40,8 +40,14 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
 
+const rootNode = new THREE.Object3D();
+scene.add(rootNode);
+
+let count = 6;
+for(let i = 0; i<count; i++){
 const baseNode = new THREE.Object3D();
-scene.add(baseNode);
+baseNode.rotation.y = i * (2 * Math.PI / count);
+rootNode.add(baseNode);
 
 
 const artwork = new THREE.Mesh(
@@ -52,7 +58,10 @@ const artwork = new THREE.Mesh(
 baseNode.add(artwork);
 
 artwork.position.z = -4;
+}
+
 function animate() {
+  rootNode.rotation.y += 0.001
   renderer.render(scene, camera);
 }
 
