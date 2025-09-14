@@ -86,7 +86,6 @@ mirror.rotateX(-Math.PI / 2);
 scene.add(mirror);
 
 function animate() {
-  rootNode.rotation.y += 0.001;
   renderer.render(scene, camera);
 }
 
