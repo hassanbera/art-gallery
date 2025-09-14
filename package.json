@@ -1,11 +1,12 @@
 {
   "dependencies": {
+    "@tweenjs/tween.js": "^25.0.0",
     "three": "^0.180.0"
   },
   "devDependencies": {
     "vite": "^6.3.6"
   },
   "scripts": {
-    "dev":"vite"
+    "dev": "vite"
   }
 }

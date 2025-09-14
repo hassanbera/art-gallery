@@ -9,59 +9,55 @@ const images = [
   "sunday.jpg",
 ];
 
-const titles = [
-  "The Death of Socrates",
-  "Starry Night",
-  "The Great Wave off Kanagawa",
-  "Effect of Spring, Giverny",
-  "Mount Corcoran",
-  "A Sunday on La Grande Jatte",
-];
-
-const artists = [
-  "Jacques-Louis David",
-  "Vincent Van Gogh",
-  "Katsushika Hokusai",
-  "Claude Monet",
-  "Albert Bierstadt",
-  "George Seurat",
-];
+const textureLoader = new THREE.TextureLoader();
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+
 renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
 
 const rootNode = new THREE.Object3D();
 scene.add(rootNode);
 
-let count = 6;
-for(let i = 0; i<count; i++){
-const baseNode = new THREE.Object3D();
-baseNode.rotation.y = i * (2 * Math.PI / count);
-rootNode.add(baseNode);
 
+const count = images.length;
+for (let i = 0; i < count; i++) {
+  const image = textureLoader.load(images[i]);
 
-const artwork = new THREE.Mesh(
-  new THREE.BoxGeometry(3, 2, 0.1),
-  new THREE.MeshBasicMaterial({ color: 0xf08080 })
-);
+  const baseNode = new THREE.Object3D();
+  baseNode.rotation.y = 2 * Math.PI * (i / count);
 
-baseNode.add(artwork);
+  const border = new THREE.Mesh (
+    new THREE.BoxGeometry(3.2, 2.2, 0.005),
+    new THREE.MeshStandardMaterial({ color: 0x303030})
+  );
+  border.position.z = -4;
+  baseNode.add(border);
 
-artwork.position.z = -4;
+  const artwork = new THREE.Mesh(
+    new THREE.BoxGeometry(3, 2, 0.01),
+    new THREE.MeshStandardMaterial({map: image})
+  );
+  artwork.position.z = -4;
+  baseNode.add(artwork);
+
+  rootNode.add(baseNode);
 }
 
+const spotlight = new THREE.SpotLight(0xffffff, 100.0, 10, 0.65, 1);
+spotlight.position.set(0, 5, 0);
+spotlight.target.position.set(0, 1, -5);
+scene.add(spotlight);
+scene.add(spotlight.target);
+
+
 function animate() {
-  rootNode.rotation.y += 0.001
+  rootNode.rotation.y += 0.001;
   renderer.render(scene, camera);
 }
 
